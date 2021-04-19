@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=RocknRoll+One&display=swap');
+
+
+:root{
+    --mainbgcolor_1: #5a81c3;
+    --mainbgColor_2: #17181a;
+    --headerbgColor: #eeeeee;
+    --cardbgColor: #212121;
+    --headerFontSize: 1.3rem;
+    --font-family: 'RocknRoll One', sans-serif;
+
+}
+
+
+.wrapper{
+    font-family: var(--font-family);
+    width:100vw;
+    height:100vh;
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    
+}
+.playlists, .local{
+    border: 1px solid black;
+}
+
+.title{
+    font-size: var(--headerFontSize);
+    background-color: var(--headerbgColor);
+}
+
+.body_container{
+    
+    height:90vh;
+}
+.body_container_right{
+    height:100;
+}
+
+.search_container{
+    height: 22%;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    /* border: 1px solid black; */
+}
+.search_container p{
+    flex-grow: 1;
+}
+.search_container Input{
+    flex-grow: 3;
+    width: 35%;
+    border-radius: 25px;
+    border: 1px solid black;
+    margin-right: 5%;
+    margin-bottom: 1%;
+}
+.card_container{
+    height: 75%;
+    width: 100%;
+    
+    overflow:scroll;
+    border: 1px solid rgb(35, 92, 250);
+}
+
+.card_item{
+    min-height: 6.5rem;
+    align-items: stretch;
+    display:flex;
+    border: 1px solid rgb(155, 57, 57);
+}
+
+.image_container, .card_content{
+    
+    border: 1px solid blueviolet
+}
+.image_container{
+
+    width: 25%;
+}
+
+.card_content{
+
+    flex-grow: 4;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+@media (max-width:480px){
+    .playlists, .local{
+        border: 1px solid black;
+        height:50vh;
+        overflow: scroll;
+    }
+    .card_container{
+        height:unset
+    }
+}
