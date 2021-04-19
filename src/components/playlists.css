@@ -68,6 +68,7 @@
     min-height: 6.5rem;
     align-items: stretch;
     display:flex;
+    position: relative;
     border: 1px solid rgb(155, 57, 57);
 }
 
@@ -86,6 +87,14 @@
     display: flex;
     justify-content: center;
     align-items: center
+}
+.card_container_right{
+    
+    min-height: 90vh;
+    width: 100%;
+    
+    overflow:scroll;
+    border: 1px solid rgb(35, 92, 250);
 }
 
 @media (max-width:480px){

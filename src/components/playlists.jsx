@@ -54,6 +54,40 @@ const Playlists = () => {
             console.log("token is",data)});
         
     },[])
+
+    const dragStart = (e)=>{
+         e.dataTransfer.setData('card',e.target.id);
+        const doc = document.getElementById('card_item_id');
+        console.log("dragStart",e.target);
+    }
+
+    const touchMove = (e)=>{
+        const doc = document.getElementById('card_item_id');
+        console.log("doc",doc);
+        const touchLocation = e.targetTouches[0];
+        doc.style.left = touchLocation.pageX + 'px';
+        doc.style.right = touchLocation.pageY + 'px';
+       /*  console.log("touchMove",e.targetTouches[0]); */
+    }
+    const onDragOverr = (e) => {
+            console.log(e)
+            e.stopPropagation();
+            e.preventDefault();
+        }
+
+        const onFileDrop = (e) => {
+
+            const card = e.dataTransfer.getData('card')
+            console.log(card)
+
+            e.stopPropagation();
+            e.target.appendChild(document.getElementById(card));
+           
+        }
+          const  onDragEnter = (e) => {
+            console.log(e)
+            e.stopPropagation();
+          }
   
 /*      console.log("names",playlists.playlists.items); */
      /* if(playlists !== null ){
@@ -77,7 +111,7 @@ const Playlists = () => {
                    
                  playlists.playlists.items.map(playlist =>     
                 { return (
-                    <div className="card_item">
+                    <div style={{cursor:'pointer'}} id={playlist.id} key={playlist.id} onDragStart={(e)=>dragStart(e)}  draggable="true" className="card_item">
                     <div style={{backgroundImage:`url(${playlist.images[0].url})`,backgroundSize:"cover",height:'auto',backgroundRepeat:'no-repeat'}} className="image_container"></div>
                     <div className="card_content"><div>{playlist.name}</div></div>
                     </div>)
@@ -93,11 +127,12 @@ const Playlists = () => {
                 <div className="body_container_right">
                 <div>
                 
-                <div className="title">Featured Playlists</div>
-                <div className="title">Featured Playlists</div>
-                <div className="title">Featured Playlists</div>
-                <div className="title">Featured Playlists</div>
+                <div id="card_container_right" onDragEnter={(e)=>{onDragEnter(e)}} onDragOver={(e)=>{onDragOverr(e)}}
+                 onDrop={e=>{onFileDrop(e)}}  className="card_container_right">
+                
+                
                 </div>
+                </div> 
                </div>
             </div>
         </div>
@@ -105,3 +140,5 @@ const Playlists = () => {
 }
 
 export default Playlists
+
+/*  onTouchMove={(e)=>{touchMove(e)}}  onTouchStart={e=>dragStart(e)} */
