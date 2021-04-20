@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './playlists.css'
 import { Input } from 'antd';
-import { FaBeer } from 'react-icons/fa';
+import { FaBeer, FaFilter } from 'react-icons/fa';
 
 import { ToastContainer, toast } from 'react-toastify';
 const Playlists = () => {
@@ -10,11 +10,31 @@ const Playlists = () => {
     const [token, setToken] = useState();
     const [search,setSearch] = useState();
     const [localItems, setLocalItems] = useState();
+    const [forFilter,setForFilter] = useState();
     const notify = () => toast("Wow so easy!");
     
     useEffect(()=>{
-        let LS = JSON.parse(localStorage.getItem('values')); 
-       console.log("ls",LS)
+        if(localStorage.getItem('values') !== undefined || 
+        localStorage.getItem('values') !=null || localStorage.getItem('values') !=''){
+            let LS = JSON.parse(localStorage.getItem('values')); 
+         console.log("ls",LS);
+         if(typeof LS == Object || typeof LS == String || typeof LS == Number || typeof LS == NaN){
+            setForFilter([LS]);
+         }
+         else{
+             setForFilter(LS)
+         }
+        if(LS !== undefined || LS !== null || LS !== ''){
+            setLocalItems(LS)
+        }
+   
+        }
+        else{
+            return{
+
+            }
+        }
+         
     },[])
 
     useEffect(()=> {
@@ -38,7 +58,7 @@ const Playlists = () => {
         const fetchThePlaylists = async(data)=>{
             console.log("incomeing token",data);
             return await fetch(`https://api.spotify.com/v1/browse/featured-playlists?country=IN&
-            locale=hi_IN&timestamp=2014-10-23T09%3A00%3A00.000Z&limit=10&offset=5`,{
+            locale=te&timestamp=2014-10-23T09%3A00%3A00.000Z&limit=10&offset=5`,{
                 method: 'GET',
                 headers:{
                     'Content-Type': 'application/json',
@@ -56,13 +76,38 @@ const Playlists = () => {
               console.log("access_token",data.access_token)
                 fetchThePlaylists(data.access_token).then(data => {
 
+                  
+
                     setPlaylists(data);
 
                     console.log("data",data)});
+                    if(forFilter!=undefined && playlists!=undefined ){
+                        console.log('nadustava leda')
+                    }
+
                     console.log("token is",data)});
                     console.log("playlists",playlists);
 
     },[])
+
+    const getState = ()=>{
+        setTimeout(()=>{
+            if(playlists != undefined || forFilter != undefined){
+                console.log("running if")
+            }
+            else{
+                console.log("else")
+            }
+        },200)
+        if(forFilter!=undefined && playlists!=undefined ){
+            console.log('nadustava leda')
+        }
+        
+    }
+    
+   useEffect(()=>{
+       return getState()
+   },[])
 
     /* const getSTate = ()=> {
         let LS = JSON.parse(localStorage.getItem('values'));
@@ -101,7 +146,7 @@ const Playlists = () => {
             toast();
             let arr =[];
             console.log("localItems",localItems)
-            if(localItems !== undefined ){
+            if(localItems != undefined || localItems != null  || localItems == ''){
                 console.log('prev',localItems)
                 localItems.map(value => {
                     arr.push(value);
@@ -127,6 +172,7 @@ const Playlists = () => {
                 /* localStorage.setItem("values",JSON.stringify(localItems)); */
             }
         }
+        
  
           const  onDragEnter = (e) => {
             console.log(e)
@@ -143,19 +189,38 @@ const Playlists = () => {
             <div className="playlists">
               <div className="title">Featured Playlists</div>
                <div className="body_container">
-                <div className="search_container">
+                {/* <div className="search_container">
                 <ToastContainer />
                   <p>Search by Language</p>
                   
                   <Input onChange={e=>onChangeHandler(e)} placeholder={"Basic usage"} />
                  
-                </div>
+                </div> */}
                 <div className="card_container">
-               { playlists === null || playlists === undefined?
-                 <h1>No playlists</h1> :
+                { /* forFilter !== undefined ||forFilter!=null ?
+                    
+                   forFilter.map(filter=>{
+                    
+                 
+                          console.log(filter);
+                      
+                      
+                   })     
+                    
+                 :<h1>undefined</h1> */
+                }
+               { playlists === null || playlists === undefined 
+                ?
+                 <h1>{JSON.stringify(forFilter)}</h1> :
                    
-                 playlists.playlists.items.map(playlist =>     
-                { return (
+
+                 playlists.playlists.items.map(playlist =>   
+                      
+                { 
+                    
+                    return (forFilter.find(filter=>{
+                        return filter == playlist.id
+                    }) ?null:
                     <div style={{cursor:'pointer'}} id={playlist.id} key={playlist.id} onDragStart={(e)=>dragStart(e)}  draggable="true" className="card_item">
                     <div style={{backgroundImage:`url(${playlist.images[0].url})`,backgroundSize:"cover",height:'auto',backgroundRepeat:'no-repeat'}} className="image_container"></div>
                     <div className="card_content"><div>{playlist.name}</div></div>
@@ -174,7 +239,19 @@ const Playlists = () => {
                 
                 <div id="card_container_right" onDragEnter={(e)=>{onDragEnter(e)}} onDragOver={(e)=>{onDragOverr(e)}}
                  onDrop={e=>{onFileDrop(e)}}  className="card_container_right">
+                 { forFilter != undefined && forFilter!=null &&
+                    playlists != null && playlists!=undefined ?
+                    forFilter && playlists.playlists.items.map(playlist=>{
+                        return forFilter.find(filter=>{
+                            return filter == playlist.id;
+                        })?
+                        <div style={{cursor:'pointer'}} id={playlist.id} key={playlist.id} onDragStart={(e)=>dragStart(e)}  draggable="true" className="card_item">
+                        <div style={{backgroundImage:`url(${playlist.images[0].url})`,backgroundSize:"cover",height:'auto',backgroundRepeat:'no-repeat'}} className="image_container"></div>
+                        <div className="card_content"><div>{playlist.name}</div></div>
+                        </div>:null
+                    }):null
                 
+                }
                 
                 </div>
                 </div> 
@@ -185,6 +262,15 @@ const Playlists = () => {
 }
 
 export default Playlists
+
+
+
+/* 
+
+
+*/
+
+
 
 /*  onTouchMove={(e)=>{touchMove(e)}}  onTouchStart={e=>dragStart(e)} */
 
