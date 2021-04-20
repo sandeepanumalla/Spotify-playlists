@@ -30,11 +30,16 @@
 }
 
 .body_container{
-    
-    height:90vh;
+    color:white;
+    background-image: linear-gradient(to right,#8199c4,#d4d4d4);
+    height:95vh;
+    overflow: scroll;
 }
 .body_container_right{
-    height:100;
+    height:95.2vh;
+    background-image: linear-gradient(to right,#8199c4,#d4d4d4);
+    color:white;
+   
 }
 
 .search_container{
@@ -55,26 +60,55 @@
     border: 1px solid black;
     margin-right: 5%;
     margin-bottom: 1%;
+    
+}
+Input:active{
+    outline:none;
+}
+Input:focus{
+    outline: auto;
 }
 .card_container{
-    height: 75%;
+
     width: 100%;
-    
+    padding-top: 1rem ;
+    display:flex;
+    flex-direction: column;
+    gap:10px;
     overflow:scroll;
-    border: 1px solid rgb(35, 92, 250);
+    /* border: 1px solid rgb(35, 92, 250); */
+}
+.card_item,.card_item_right{
+    border-radius: 5px;
+    cursor:pointer;
+}
+.card_item:hover{
+    transform: scale(1.01);
+    transition: transform .1s ease-in;
+}
+.card_container_right{
+    padding-top: 1rem;
+    display:flex;
+    flex-direction: column;
+    gap:10px;
+    overflow:scroll;
 }
 
 .card_item{
     min-height: 6.5rem;
     align-items: stretch;
     display:flex;
+    background-color: rgb(36, 35, 35,.8);
     position: relative;
-    border: 1px solid rgb(155, 57, 57);
+  
+    margin-left: 5px;
+    margin-right: 5px;
+   
 }
 
 .image_container, .card_content{
-    
-    border: 1px solid blueviolet
+    border-radius: 5px;
+   border: none;
 }
 .image_container{
 
@@ -82,7 +116,7 @@
 }
 
 .card_content{
-
+    gap:10px;
     flex-grow: 4;
     display: flex;
     justify-content: center;
@@ -90,11 +124,12 @@
 }
 .card_container_right{
     
-    min-height: 90vh;
-    width: 100%;
+
     
+    width: 100%;
+    height:95.2vh;
     overflow:scroll;
-    border: 1px solid rgb(35, 92, 250);
+
 }
 
 @media (max-width:480px){
@@ -102,6 +137,16 @@
         border: 1px solid black;
         height:50vh;
         overflow: scroll;
+    }
+    .body_container{
+        height:45vh;
+        overflow: scroll;
+    }
+    .body_container_right{
+        
+            height:45vh;
+            overflow: scroll;
+        
     }
     .card_container{
         height:unset
