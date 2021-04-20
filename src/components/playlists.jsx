@@ -11,6 +11,12 @@ const Playlists = () => {
     const [search,setSearch] = useState();
     const [localItems, setLocalItems] = useState();
     const notify = () => toast("Wow so easy!");
+    
+    useEffect(()=>{
+        let LS = JSON.parse(localStorage.getItem('values')); 
+       console.log("ls",LS)
+    },[])
+
     useEffect(()=> {
        
         const fetchTheToken = async ()=>{
@@ -41,69 +47,29 @@ const Playlists = () => {
                 },
                
             }).then(response =>response.json())
-            /* .then(data =>{
-               
-                setPlaylists(data);
-            }) */
+            
         }
 
-        /* const getPlaylists =async ()=>{
-            
-            const lS = JSON.parse(localStorage.getItem('values'));
-            if(lS !== undefined ){
-                const filtered = playlists.playlists.items.find(item => {
-                    
-                    console.log("filtered array",item.id); })
-               
-            
-            }
-                    
-                   
-        } */
+        
         fetchTheToken().then(data => {
            
               console.log("access_token",data.access_token)
                 fetchThePlaylists(data.access_token).then(data => {
+
                     setPlaylists(data);
+
                     console.log("data",data)});
-                 console.log("token is",data)});
-                 console.log("playlists",playlists);
-
-              /*   getPlaylists() */
-
-               
-                 
+                    console.log("token is",data)});
+                    console.log("playlists",playlists);
 
     },[])
-/* useEffect(() =>{
-    const fetch =async()=>{ 
-       await console.log("playlists",playlists);
-    }
-    setTimeout(()=>{
-        fetch();
-    },15000)
-},[]) */
+
+    /* const getSTate = ()=> {
+        let LS = JSON.parse(localStorage.getItem('values'));
+        console.log("sdf",playlists);
+    } */
    
-   /*  useEffect(()=>{
-        const lS = JSON.parse(localStorage.getItem('values'));
-        if(lS !== undefined ){
-            setTimeout(()=>{
-                const filtered = playlists.playlists.items.find(item => {
-            
-                    lS.map(local =>{
-                        
-                       return local != item.id ;
-                    })
-                   
-                }  )
-                console.log("filtered array",filtered);
-            },[200])
-            
-            
-        }
-           
-        localStorage.setItem("values",JSON.stringify(localItems));
-    },[]) */
+    
     console.log("playlists",playlists);
     const dragStart = (e)=>{
          e.dataTransfer.setData('card',e.target.id);
