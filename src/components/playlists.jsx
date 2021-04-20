@@ -17,16 +17,21 @@ const Playlists = () => {
         if(localStorage.getItem('values') !== undefined || 
         localStorage.getItem('values') !=null || localStorage.getItem('values') !=''){
             let LS = JSON.parse(localStorage.getItem('values')); 
-         console.log("ls",LS);
-         if(typeof LS == Object || typeof LS == String || typeof LS == Number || typeof LS == NaN){
+         console.log("ls",typeof LS);
+         if( typeof LS === "string" ){
+             console.log("running string")
             setForFilter([LS]);
+            setLocalItems([LS])
+            
          }
          else{
-             setForFilter(LS)
+             setForFilter(LS);
+             if(LS !== undefined || LS !== null || LS !== ''){
+                setLocalItems(LS)
+            }
+             
          }
-        if(LS !== undefined || LS !== null || LS !== ''){
-            setLocalItems(LS)
-        }
+       
    
         }
         else{
@@ -89,7 +94,7 @@ const Playlists = () => {
                     console.log("playlists",playlists);
 
     },[])
-
+    console.log()
     const getState = ()=>{
         setTimeout(()=>{
             if(playlists != undefined || forFilter != undefined){
@@ -109,10 +114,7 @@ const Playlists = () => {
        return getState()
    },[])
 
-    /* const getSTate = ()=> {
-        let LS = JSON.parse(localStorage.getItem('values'));
-        console.log("sdf",playlists);
-    } */
+    
    
     
     console.log("playlists",playlists);
@@ -122,14 +124,7 @@ const Playlists = () => {
         console.log("dragStart",e.target);
     }
 
-    /* const touchMove = (e)=>{
-        const doc = document.getElementById('card_item_id');
-        console.log("doc",doc);
-        const touchLocation = e.targetTouches[0];
-        doc.style.left = touchLocation.pageX + 'px';
-        doc.style.right = touchLocation.pageY + 'px';
-      
-    } */
+    
     const onDragOverr = (e) => {
             /* console.log(e) */
             e.stopPropagation();
@@ -160,17 +155,18 @@ const Playlists = () => {
                 
                  localStorage.setItem("values",JSON.stringify(arr));
             }
-            else{
+            else{ 
                 console.log("else")
                 arr.push(card);
                 console.log("arr",arr[0]);
                 arr.map(value =>{
+
                     setLocalItems([value]);
                     localStorage.setItem("values",JSON.stringify(value));
                 })
                
-                /* localStorage.setItem("values",JSON.stringify(localItems)); */
             }
+            
         }
         
  
@@ -189,43 +185,29 @@ const Playlists = () => {
             <div className="playlists">
               <div className="title">Featured Playlists</div>
                <div className="body_container">
-                {/* <div className="search_container">
-                <ToastContainer />
-                  <p>Search by Language</p>
-                  
-                  <Input onChange={e=>onChangeHandler(e)} placeholder={"Basic usage"} />
-                 
-                </div> */}
+               
                 <div className="card_container">
-                { /* forFilter !== undefined ||forFilter!=null ?
-                    
-                   forFilter.map(filter=>{
-                    
-                 
-                          console.log(filter);
-                      
-                      
-                   })     
-                    
-                 :<h1>undefined</h1> */
-                }
+                
                { playlists === null || playlists === undefined 
                 ?
-                 <h1>{JSON.stringify(forFilter)}</h1> :
+                 <h1>Loading...</h1> :
                    
 
                  playlists.playlists.items.map(playlist =>   
                       
                 { 
-                    
-                    return (forFilter.find(filter=>{
+                  return(
+                      
+                      forFilter && forFilter.find(filter=>{
                         return filter == playlist.id
                     }) ?null:
                     <div style={{cursor:'pointer'}} id={playlist.id} key={playlist.id} onDragStart={(e)=>dragStart(e)}  draggable="true" className="card_item">
                     <div style={{backgroundImage:`url(${playlist.images[0].url})`,backgroundSize:"cover",height:'auto',backgroundRepeat:'no-repeat'}} className="image_container"></div>
                     <div className="card_content"><div>{playlist.name}</div></div>
-                    </div>)
-                    }
+                    </div>
+                      
+                  )  
+                }
                 )
                        
                 }
@@ -242,13 +224,16 @@ const Playlists = () => {
                  { forFilter != undefined && forFilter!=null &&
                     playlists != null && playlists!=undefined ?
                     forFilter && playlists.playlists.items.map(playlist=>{
-                        return forFilter.find(filter=>{
+                        return (
+                            typeof forFilter==="string"?
+                            <h1>Not well</h1>: 
+                            forFilter.find(filter=>{
                             return filter == playlist.id;
                         })?
                         <div style={{cursor:'pointer'}} id={playlist.id} key={playlist.id} onDragStart={(e)=>dragStart(e)}  draggable="true" className="card_item">
                         <div style={{backgroundImage:`url(${playlist.images[0].url})`,backgroundSize:"cover",height:'auto',backgroundRepeat:'no-repeat'}} className="image_container"></div>
                         <div className="card_content"><div>{playlist.name}</div></div>
-                        </div>:null
+                        </div>:null)
                     }):null
                 
                 }
