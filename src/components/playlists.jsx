@@ -3,14 +3,16 @@ import './playlists.css'
 import { Input } from 'antd';
 import { FaBeer } from 'react-icons/fa';
 
-
+import { ToastContainer, toast } from 'react-toastify';
 const Playlists = () => {
-
+   
     const [playlists, setPlaylists] = useState();
     const [token, setToken] = useState();
-
+    const [search,setSearch] = useState();
+    const [localItems, setLocalItems] = useState();
+    const notify = () => toast("Wow so easy!");
     useEffect(()=> {
-        
+       
         const fetchTheToken = async ()=>{
             const clientId = process.env.REACT_APP_CLIENT_ID;
             const clientSecret = process.env.REACT_APP_CLIENT_SECRET
@@ -27,7 +29,6 @@ const Playlists = () => {
             .catch(err =>console.log(err))
         }
         
-
         const fetchThePlaylists = async(data)=>{
             console.log("incomeing token",data);
             return await fetch(`https://api.spotify.com/v1/browse/featured-playlists?country=IN&
@@ -37,40 +38,89 @@ const Playlists = () => {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                     'Authorization': 'Bearer ' + data
-
                 },
                
             }).then(response =>response.json())
-            .then(data =>{console.log(data)
+            /* .then(data =>{
+               
                 setPlaylists(data);
-            })
+            }) */
         }
-        fetchTheToken().then(data => {
-           /*  setToken(data); */
-           console.log("access_token",data.access_token)
-                fetchThePlaylists(data.access_token).then(data => {
-                   
-                    console.log("data",data)});
-            console.log("token is",data)});
-        
-    },[])
 
+        /* const getPlaylists =async ()=>{
+            
+            const lS = JSON.parse(localStorage.getItem('values'));
+            if(lS !== undefined ){
+                const filtered = playlists.playlists.items.find(item => {
+                    
+                    console.log("filtered array",item.id); })
+               
+            
+            }
+                    
+                   
+        } */
+        fetchTheToken().then(data => {
+           
+              console.log("access_token",data.access_token)
+                fetchThePlaylists(data.access_token).then(data => {
+                    setPlaylists(data);
+                    console.log("data",data)});
+                 console.log("token is",data)});
+                 console.log("playlists",playlists);
+
+              /*   getPlaylists() */
+
+               
+                 
+
+    },[])
+/* useEffect(() =>{
+    const fetch =async()=>{ 
+       await console.log("playlists",playlists);
+    }
+    setTimeout(()=>{
+        fetch();
+    },15000)
+},[]) */
+   
+   /*  useEffect(()=>{
+        const lS = JSON.parse(localStorage.getItem('values'));
+        if(lS !== undefined ){
+            setTimeout(()=>{
+                const filtered = playlists.playlists.items.find(item => {
+            
+                    lS.map(local =>{
+                        
+                       return local != item.id ;
+                    })
+                   
+                }  )
+                console.log("filtered array",filtered);
+            },[200])
+            
+            
+        }
+           
+        localStorage.setItem("values",JSON.stringify(localItems));
+    },[]) */
+    console.log("playlists",playlists);
     const dragStart = (e)=>{
          e.dataTransfer.setData('card',e.target.id);
         const doc = document.getElementById('card_item_id');
         console.log("dragStart",e.target);
     }
 
-    const touchMove = (e)=>{
+    /* const touchMove = (e)=>{
         const doc = document.getElementById('card_item_id');
         console.log("doc",doc);
         const touchLocation = e.targetTouches[0];
         doc.style.left = touchLocation.pageX + 'px';
         doc.style.right = touchLocation.pageY + 'px';
-       /*  console.log("touchMove",e.targetTouches[0]); */
-    }
+      
+    } */
     const onDragOverr = (e) => {
-            console.log(e)
+            /* console.log(e) */
             e.stopPropagation();
             e.preventDefault();
         }
@@ -79,30 +129,59 @@ const Playlists = () => {
 
             const card = e.dataTransfer.getData('card')
             console.log(card)
-
+ 
             e.stopPropagation();
-            e.target.appendChild(document.getElementById(card));
-           
+            e.target.appendChild(document.getElementById(card))
+            toast();
+            let arr =[];
+            console.log("localItems",localItems)
+            if(localItems !== undefined ){
+                console.log('prev',localItems)
+                localItems.map(value => {
+                    arr.push(value);
+                });
+               
+                 console.log("running if")
+                 arr.push(card);
+                 setLocalItems(arr);
+                 console.log(JSON.stringify(localItems));
+                
+                
+                 localStorage.setItem("values",JSON.stringify(arr));
+            }
+            else{
+                console.log("else")
+                arr.push(card);
+                console.log("arr",arr[0]);
+                arr.map(value =>{
+                    setLocalItems([value]);
+                    localStorage.setItem("values",JSON.stringify(value));
+                })
+               
+                /* localStorage.setItem("values",JSON.stringify(localItems)); */
+            }
         }
+ 
           const  onDragEnter = (e) => {
             console.log(e)
             e.stopPropagation();
           }
   
-/*      console.log("names",playlists.playlists.items); */
-     /* if(playlists !== null ){
-         console.log(playlists.playlists.items[0].images[0].url)
-     } */
+         const  onChangeHandler = (e) => {
+              setSearch(e.target.value);
+          }
+
          return (
         <div className="wrapper">
+       
             <div className="playlists">
               <div className="title">Featured Playlists</div>
                <div className="body_container">
                 <div className="search_container">
-                 
+                <ToastContainer />
                   <p>Search by Language</p>
                   
-                  <Input placeholder={"Basic usage"} />
+                  <Input onChange={e=>onChangeHandler(e)} placeholder={"Basic usage"} />
                  
                 </div>
                 <div className="card_container">
@@ -142,3 +221,49 @@ const Playlists = () => {
 export default Playlists
 
 /*  onTouchMove={(e)=>{touchMove(e)}}  onTouchStart={e=>dragStart(e)} */
+
+
+/* 
+if(localStorage.getItem('values') !== null) { */
+    /*   const values = JSON.parse(localStorage.getItem('values')).map(e=>{
+          return e;
+      }) */
+     /*  console.log('values',values);
+       arr = [values];
+        */
+      /* arr.push(card); */
+     /*  console.log("sdfsd",JSON.parse(localStorage.getItem('values')));
+      let pr = [] ;
+      const parsed =JSON.parse(localStorage.getItem('values'));
+      console.log("parsed", parsed[1])
+      console.log("parsed",typeof parsed);
+      let values =  Object.values(parsed);
+      for (let key in parsed){
+          if(parsed.hasOwnProperty(key)){
+            console.log(`${key} : ${parsed[key]}`);
+            pr.push(parsed[key]);
+          }
+       }
+      console.log("parsed",values) */
+     /*  arr = [parsed]; */
+     /* console.log("arr pr",pr) */
+     /*  arr.push(card);
+      const str = JSON.stringify(arr);
+      console.log("arr",JSON.stringify(arr));
+      console.log("strt",JSON.parse(str));
+      localStorage.setItem("values",str); */
+ /*  }
+  else{
+       arr = [card];
+       const str = JSON.stringify(arr[0])
+       console.log(str)
+       console.log(JSON.parse(str));
+       localStorage.setItem("values",str);
+  }
+   */
+
+
+  
+  
+/*  localStorage.setItem("values",str); */
+ 
